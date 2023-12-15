@@ -28,3 +28,11 @@ func GetProductFromName(ctx *gofr.Context, name string) (*model.Product, error) 
 	}
 	return product, nil
 }
+
+func GetAllProducts(ctx *gofr.Context) ([]model.Product, error) {
+	products, err := productDao.GetAllProducts(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error getting products: %w", err)
+	}
+	return products, nil
+}

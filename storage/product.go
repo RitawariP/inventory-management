@@ -50,7 +50,7 @@ func (p *productDaoImpl) GetAllProducts(ctx *gofr.Context) ([]model.Product, err
 
 	for rows.Next() {
 		var product model.Product
-		if err := rows.Scan(&product.Name, &product.Description, &product.Price, &product.Created); err != nil {
+		if err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Created); err != nil {
 			return nil, err
 		}
 

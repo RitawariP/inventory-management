@@ -124,3 +124,72 @@ func TestGetProductFromName(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAllProducts(t *testing.T) {
+	ctx := &gofr.Context{}
+	products := []model.Product{
+		{
+			ID:          1,
+			Name:        "iPhone",
+			Description: "Apple iPhone",
+			Price:       1000,
+			Created:     "2021-01-01",
+		},
+		{
+			ID:          2,
+			Name:        "iPad",
+			Description: "Apple iPad",
+			Price:       2000,
+			Created:     "2021-01-01",
+		},
+	}
+	type args struct {
+		ctx *gofr.Context
+	}
+	tests := []struct {
+		name    string
+		args    args
+		setup   func() storage.ProductDao
+		wantRes []model.Product
+		wantErr error
+	}{
+		{
+			name: "db error",
+			args: args{
+				ctx: ctx,
+			},
+			setup: func() storage.ProductDao {
+				mockProductDao := mocks.NewProductDao(t)
+				mockProductDao.On("GetAllProducts", ctx).
+					Return(nil, fmt.Errorf("internal error"))
+				return mockProductDao
+			},
+			wantRes: nil,
+			wantErr: fmt.Errorf("internal error"),
+		},
+		{
+			name: "success",
+			args: args{
+				ctx: ctx,
+			},
+			setup: func() storage.ProductDao {
+				mockProductDao := mocks.NewProductDao(t)
+				mockProductDao.On("GetAllProducts", ctx).
+					Return(products, nil)
+				return mockProductDao
+			},
+			wantRes: products,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			productDao = tt.setup()
+			res, err := GetAllProducts(tt.args.ctx)
+			if tt.wantErr != nil {
+				assert.Error(t, err, tt.wantErr)
+			}
+			assert.Equal(t, tt.wantRes, res)
+		})
+	}
+}
