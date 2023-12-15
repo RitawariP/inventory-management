@@ -141,5 +141,5 @@ require (
 	gorm.io/driver/postgres v1.4.8 // indirect
 	gorm.io/driver/sqlite v1.4.4 // indirect
 	gorm.io/driver/sqlserver v1.4.1 // indirect
-	gorm.io/gorm v1.24.3 // indirect
+	gorm.io/gorm v1.25.5 // indirect
 )
