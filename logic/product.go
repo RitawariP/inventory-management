@@ -20,3 +20,11 @@ func CreateProduct(ctx *gofr.Context, product model.Product) error {
 	}
 	return nil
 }
+
+func GetProductFromName(ctx *gofr.Context, name string) (*model.Product, error) {
+	product, err := productDao.GetProductFromName(ctx, name)
+	if err != nil {
+		return nil, fmt.Errorf("error getting product: %w", err)
+	}
+	return product, nil
+}

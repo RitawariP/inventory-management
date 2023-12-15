@@ -34,7 +34,7 @@ func (p *productDaoImpl) CreateProduct(ctx *gofr.Context, product model.Product)
 func (p *productDaoImpl) GetProductFromName(ctx *gofr.Context, name string) (*model.Product, error) {
 	var product model.Product
 	err := ctx.DB().QueryRowContext(ctx, selectByNameQuery, name).
-		Scan(&product.Name, &product.Description, &product.Price, &product.Created)
+		Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Created)
 	if err != nil {
 		return nil, err
 	}

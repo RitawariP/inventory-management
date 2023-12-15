@@ -7,6 +7,5 @@ import (
 
 func RegisterRoutes(app *gofr.Gofr) {
 	app.GET("/product", api.GetProduct)
-
 	app.POST("/product", api.CreateProduct)
 }

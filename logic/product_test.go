@@ -61,3 +61,66 @@ func TestCreateProduct(t *testing.T) {
 		})
 	}
 }
+
+func TestGetProductFromName(t *testing.T) {
+	ctx := &gofr.Context{}
+	product := model.Product{
+		ID:          1,
+		Name:        "iPhone",
+		Description: "Apple iPhone",
+		Price:       1000,
+		Created:     "2021-01-01",
+	}
+	type args struct {
+		ctx         *gofr.Context
+		productName string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		setup   func() storage.ProductDao
+		wantRes *model.Product
+		wantErr error
+	}{
+		{
+			name: "db error: product not found",
+			args: args{
+				ctx:         ctx,
+				productName: "invalid",
+			},
+			setup: func() storage.ProductDao {
+				mockProductDao := mocks.NewProductDao(t)
+				mockProductDao.On("GetProductFromName", ctx, "invalid").
+					Return(nil, fmt.Errorf("product not found"))
+				return mockProductDao
+			},
+			wantRes: nil,
+			wantErr: fmt.Errorf("product not found"),
+		},
+		{
+			name: "success",
+			args: args{
+				ctx:         ctx,
+				productName: "iPhone",
+			},
+			setup: func() storage.ProductDao {
+				mockProductDao := mocks.NewProductDao(t)
+				mockProductDao.On("GetProductFromName", ctx, "iPhone").
+					Return(&product, nil)
+				return mockProductDao
+			},
+			wantRes: &product,
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			productDao = tt.setup()
+			res, err := GetProductFromName(tt.args.ctx, tt.args.productName)
+			if tt.wantErr != nil {
+				assert.Error(t, err, tt.wantErr)
+			}
+			assert.Equal(t, tt.wantRes, res)
+		})
+	}
+}
