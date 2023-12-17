@@ -5,4 +5,5 @@ const (
 	selectAllQuery    = "SELECT * FROM products"
 	selectByNameQuery = "SELECT * FROM products WHERE name = ?"
 	updateQuery       = "UPDATE products SET description = ?, price = ? WHERE name = ?"
+	deleteQuery       = "DELETE FROM products WHERE name = ?"
 )

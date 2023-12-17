@@ -11,6 +11,7 @@ type ProductDao interface {
 	GetProductFromName(ctx *gofr.Context, name string) (*model.Product, error)
 	GetAllProducts(ctx *gofr.Context) ([]model.Product, error)
 	UpdateProduct(ctx *gofr.Context, product model.Product) error
+	DeleteProduct(ctx *gofr.Context, name string) error
 }
 
 type productDaoImpl struct{}
@@ -67,6 +68,18 @@ func (p *productDaoImpl) UpdateProduct(ctx *gofr.Context, product model.Product)
 	rowsAffected, _ := res.RowsAffected()
 	if rowsAffected == 0 {
 		return fmt.Errorf("update error: no rows affected")
+	}
+	return nil
+}
+
+func (p *productDaoImpl) DeleteProduct(ctx *gofr.Context, name string) error {
+	res, err := ctx.DB().ExecContext(ctx, deleteQuery, name)
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ := res.RowsAffected()
+	if rowsAffected == 0 {
+		return fmt.Errorf("delete error: no rows affected")
 	}
 	return nil
 }
