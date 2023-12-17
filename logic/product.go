@@ -36,3 +36,30 @@ func GetAllProducts(ctx *gofr.Context) ([]model.Product, error) {
 	}
 	return products, nil
 }
+
+func UpdateProduct(ctx *gofr.Context, product model.Product) error {
+	existingProduct, err := productDao.GetProductFromName(ctx, product.Name)
+	if err != nil {
+		return fmt.Errorf("error getting existing product: %w", err)
+	}
+
+	product.ID = existingProduct.ID
+	saveErr := productDao.UpdateProduct(ctx, product)
+	if saveErr != nil {
+		return fmt.Errorf("error updating product: %w", saveErr)
+	}
+	return nil
+}
+
+func DeleteProduct(ctx *gofr.Context, name string) error {
+	existingProduct, err := productDao.GetProductFromName(ctx, name)
+	if err != nil {
+		return fmt.Errorf("error getting existing product: %w", err)
+	}
+
+	deleteErr := productDao.DeleteProduct(ctx, existingProduct.ID)
+	if deleteErr != nil {
+		return fmt.Errorf("error deleting product: %w", deleteErr)
+	}
+	return nil
+}

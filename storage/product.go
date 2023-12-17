@@ -11,7 +11,7 @@ type ProductDao interface {
 	GetProductFromName(ctx *gofr.Context, name string) (*model.Product, error)
 	GetAllProducts(ctx *gofr.Context) ([]model.Product, error)
 	UpdateProduct(ctx *gofr.Context, product model.Product) error
-	DeleteProduct(ctx *gofr.Context, name string) error
+	DeleteProduct(ctx *gofr.Context, id int64) error
 }
 
 type productDaoImpl struct{}
@@ -61,7 +61,7 @@ func (p *productDaoImpl) GetAllProducts(ctx *gofr.Context) ([]model.Product, err
 }
 
 func (p *productDaoImpl) UpdateProduct(ctx *gofr.Context, product model.Product) error {
-	res, err := ctx.DB().ExecContext(ctx, updateQuery, product.Description, product.Price, product.Name)
+	res, err := ctx.DB().ExecContext(ctx, updateQuery, product.Name, product.Description, product.Price, product.ID)
 	if err != nil {
 		return err
 	}
@@ -72,8 +72,8 @@ func (p *productDaoImpl) UpdateProduct(ctx *gofr.Context, product model.Product)
 	return nil
 }
 
-func (p *productDaoImpl) DeleteProduct(ctx *gofr.Context, name string) error {
-	res, err := ctx.DB().ExecContext(ctx, deleteQuery, name)
+func (p *productDaoImpl) DeleteProduct(ctx *gofr.Context, id int64) error {
+	res, err := ctx.DB().ExecContext(ctx, deleteQuery, id)
 	if err != nil {
 		return err
 	}

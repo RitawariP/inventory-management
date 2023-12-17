@@ -31,17 +31,17 @@ func (_m *ProductDao) CreateProduct(ctx *gofr.Context, product model.Product) er
 	return r0
 }
 
-// DeleteProduct provides a mock function with given fields: ctx, name
-func (_m *ProductDao) DeleteProduct(ctx *gofr.Context, name string) error {
-	ret := _m.Called(ctx, name)
+// DeleteProduct provides a mock function with given fields: ctx, id
+func (_m *ProductDao) DeleteProduct(ctx *gofr.Context, id int64) error {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteProduct")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*gofr.Context, string) error); ok {
-		r0 = rf(ctx, name)
+	if rf, ok := ret.Get(0).(func(*gofr.Context, int64) error); ok {
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Error(0)
 	}
